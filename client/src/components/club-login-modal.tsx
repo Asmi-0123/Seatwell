@@ -21,17 +21,26 @@ export function ClubLoginModal({ isOpen, onClose, onSuccess }: ClubLoginModalPro
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      const response = await apiRequest("POST", "/api/auth/login", credentials);
-      return response.json();
+      // Mock successful login for prototype
+      if (credentials.email.includes("@club.ch") || credentials.email === "seasonal@club.ch") {
+        return {
+          user: {
+            id: 2,
+            username: "seasonal.holder",
+            email: credentials.email,
+            type: "seller"
+          }
+        };
+      } else {
+        throw new Error("You do not own a seasonal ticket");
+      }
     },
     onSuccess: (data) => {
       onSuccess(data.user);
       handleClose();
     },
     onError: (error: any) => {
-      setError(error.message === "401: Invalid credentials" 
-        ? "You do not own a seasonal ticket" 
-        : "Login failed. Please try again.");
+      setError("You do not own a seasonal ticket");
     },
   });
 
@@ -69,9 +78,12 @@ export function ClubLoginModal({ isOpen, onClose, onSuccess }: ClubLoginModalPro
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="your.email@club.ch"
+              placeholder="seasonal@club.ch (for demo)"
               className="mt-1"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              Demo: Use any email ending with @club.ch
+            </p>
           </div>
           
           <div>

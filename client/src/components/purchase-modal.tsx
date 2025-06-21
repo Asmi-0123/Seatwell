@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, Download, Mail } from "lucide-react";
 import { formatPrice, formatDateTime } from "@/lib/utils";
 import { type Game } from "@shared/schema";
 
@@ -56,9 +56,19 @@ export function PurchaseModal({ isOpen, onClose, game, seatNumber, price }: Purc
             </div>
           </div>
           
-          <Button onClick={onClose} className="seatwell-primary">
-            Close
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button variant="outline" className="flex items-center">
+              <Download className="mr-2 h-4 w-4" />
+              Download Ticket
+            </Button>
+            <Button variant="outline" className="flex items-center">
+              <Mail className="mr-2 h-4 w-4" />
+              Email Ticket
+            </Button>
+            <Button onClick={onClose} className="seatwell-primary">
+              Close
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

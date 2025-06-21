@@ -35,6 +35,10 @@
   /* Sports theme colors */
   --sports-gray: hsl(215, 25%, 27%);
   --sports-light: hsl(220, 14%, 96%);
+  
+  /* Swiss theme colors */
+  --swiss-red: hsl(0, 100%, 50%);
+  --swiss-gray: hsl(0, 0%, 20%);
 }
 
 .dark {
@@ -85,5 +89,24 @@
   
   .sports-light {
     background-color: var(--sports-light);
+  }
+
+  .swiss-flag {
+    background: linear-gradient(45deg, var(--swiss-red) 0%, var(--swiss-red) 100%);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

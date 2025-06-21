@@ -33,15 +33,15 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link key={item.path} href={item.path}>
-                <a
-                  className={`px-3 py-2 font-medium transition-colors ${
+                <span
+                  className={`px-3 py-2 font-medium transition-colors cursor-pointer ${
                     isActive(item.path)
                       ? "text-blue-600 border-b-2 border-blue-600"
                       : "text-gray-700 hover:text-blue-600"
                   } ${item.className || ""}`}
                 >
                   {item.label}
-                </a>
+                </span>
               </Link>
             ))}
           </div>
@@ -65,8 +65,8 @@ export function Navbar() {
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navItems.map((item) => (
               <Link key={item.path} href={item.path}>
-                <a
-                  className={`block px-3 py-2 font-medium transition-colors ${
+                <span
+                  className={`block px-3 py-2 font-medium transition-colors cursor-pointer ${
                     isActive(item.path)
                       ? "text-blue-600 bg-blue-50"
                       : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
@@ -74,7 +74,7 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.label}
-                </a>
+                </span>
               </Link>
             ))}
           </div>

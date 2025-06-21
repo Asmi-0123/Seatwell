@@ -25,7 +25,7 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
       {/* Hero Section */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
@@ -37,9 +37,17 @@ export default function Home() {
         <p className="text-lg text-gray-500 mb-8">
           Resell or buy tickets here
         </p>
-        <p className="text-gray-600 max-w-2xl mx-auto mb-12">
+        <p className="text-gray-600 max-w-2xl mx-auto mb-8">
           We believe in sharing value. Our platform ensures that every empty seat becomes an opportunity for someone to feel good, fans smiling to buyer.
         </p>
+        
+        <div className="flex items-center justify-center space-x-2 mb-12">
+          <span className="text-sm text-gray-500">Made in Switzerland</span>
+          <div className="w-6 h-4 bg-red-600 flex items-center justify-center">
+            <div className="w-1 h-3 bg-white"></div>
+            <div className="w-3 h-1 bg-white absolute"></div>
+          </div>
+        </div>
         
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

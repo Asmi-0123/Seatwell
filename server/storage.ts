@@ -4,6 +4,7 @@ export interface IStorage {
   // Users
   getUser(id: number): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
   
   // Games
@@ -71,6 +72,26 @@ export class MemStorage implements IStorage {
     };
     this.users.set(seasonalUser.id, seasonalUser);
 
+    // Add more mock users
+    const mockUsers = [
+      { username: "max.mustermann", email: "max.muster@email.ch", type: "seller" },
+      { username: "anna.weber", email: "anna.weber@email.ch", type: "buyer" },
+      { username: "peter.schneider", email: "peter.schneider@email.ch", type: "buyer" },
+      { username: "maria.koch", email: "maria.koch@email.ch", type: "seller" },
+    ];
+
+    mockUsers.forEach(userData => {
+      const user: User = {
+        id: this.currentUserId++,
+        username: userData.username,
+        email: userData.email,
+        password: "demo123",
+        type: userData.type,
+        createdAt: new Date(),
+      };
+      this.users.set(user.id, user);
+    });
+
     // Seed games
     const games = [
       {
@@ -119,12 +140,17 @@ export class MemStorage implements IStorage {
       this.games.set(newGame.id, newGame);
     });
 
-    // Seed some tickets
+    // Seed more tickets for better demo
     const tickets = [
       { gameId: 1, sellerId: seasonalUser.id, seatNumber: "A1", price: 8500, status: "available" },
       { gameId: 1, sellerId: seasonalUser.id, seatNumber: "A2", price: 8500, status: "available" },
+      { gameId: 1, sellerId: 4, seatNumber: "B1", price: 9000, status: "available" },
       { gameId: 2, sellerId: seasonalUser.id, seatNumber: "B5", price: 9200, status: "available" },
+      { gameId: 2, sellerId: 4, seatNumber: "A5", price: 8800, status: "available" },
+      { gameId: 3, sellerId: 6, seatNumber: "C2", price: 7500, status: "available" },
       { gameId: 4, sellerId: seasonalUser.id, seatNumber: "C3", price: 7800, status: "sold" },
+      { gameId: 4, sellerId: 4, seatNumber: "A8", price: 8200, status: "available" },
+      { gameId: 5, sellerId: 6, seatNumber: "B3", price: 7600, status: "available" },
     ];
 
     tickets.forEach(ticket => {
@@ -137,6 +163,21 @@ export class MemStorage implements IStorage {
       };
       this.tickets.set(newTicket.id, newTicket);
     });
+
+    // Add some mock transactions
+    const transactions = [
+      { ticketId: 4, buyerId: adminUser.id, sellerId: seasonalUser.id, amount: 7800, status: "completed" },
+      { ticketId: 1, buyerId: 5, sellerId: seasonalUser.id, amount: 8500, status: "completed" },
+    ];
+
+    transactions.forEach(transaction => {
+      const newTransaction: Transaction = {
+        id: this.currentTransactionId++,
+        ...transaction,
+        createdAt: new Date(),
+      };
+      this.transactions.set(newTransaction.id, newTransaction);
+    });
   }
 
   // User methods
@@ -148,9 +189,14 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values()).find(user => user.email === email);
   }
 
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const user: User = {
       ...insertUser,
+      type: insertUser.type || "buyer",
       id: this.currentUserId++,
       createdAt: new Date(),
     };
@@ -170,6 +216,7 @@ export class MemStorage implements IStorage {
   async createGame(insertGame: InsertGame): Promise<Game> {
     const game: Game = {
       ...insertGame,
+      status: insertGame.status || "upcoming",
       id: this.currentGameId++,
       createdAt: new Date(),
     };
@@ -206,6 +253,7 @@ export class MemStorage implements IStorage {
   async createTicket(insertTicket: InsertTicket): Promise<Ticket> {
     const ticket: Ticket = {
       ...insertTicket,
+      status: insertTicket.status || "available",
       id: this.currentTicketId++,
       buyerId: null,
       createdAt: new Date(),
@@ -239,6 +287,7 @@ export class MemStorage implements IStorage {
   async createTransaction(insertTransaction: InsertTransaction): Promise<Transaction> {
     const transaction: Transaction = {
       ...insertTransaction,
+      status: insertTransaction.status || "pending",
       id: this.currentTransactionId++,
       createdAt: new Date(),
     };

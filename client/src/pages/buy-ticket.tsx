@@ -39,6 +39,7 @@ export default function BuyTicket() {
   };
 
   const handlePurchase = (seatNumber: string) => {
+    // Mock purchase logic - simulate success
     setPurchasedSeat(seatNumber);
     setSeatSelectionOpen(false);
     setPurchaseModalOpen(true);

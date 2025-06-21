@@ -18,6 +18,7 @@ export const games = pgTable("games", {
   date: timestamp("date").notNull(),
   venue: text("venue").notNull(),
   status: text("status").notNull().default("upcoming"), // upcoming, active, completed
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const tickets = pgTable("tickets", {

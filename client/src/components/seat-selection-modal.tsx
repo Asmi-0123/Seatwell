@@ -11,23 +11,34 @@ interface SeatSelectionModalProps {
   onPurchase: (seatNumber: string) => void;
 }
 
+interface Seat {
+  id: string;
+  available: boolean;
+  price: number;
+}
+
 export function SeatSelectionModal({ isOpen, onClose, game, onPurchase }: SeatSelectionModalProps) {
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
 
-  const seats = [
-    { id: "A1", available: true },
-    { id: "A2", available: true },
-    { id: "A3", available: false },
-    { id: "A4", available: true },
-    { id: "A5", available: true },
-    { id: "A6", available: true },
-    { id: "A7", available: true },
-    { id: "A8", available: false },
-    { id: "A9", available: true },
-    { id: "A10", available: true },
-    { id: "A11", available: true },
-    { id: "A12", available: true },
-  ];
+  // Generate more realistic seat map
+  const generateSeats = () => {
+    const sections = ["A", "B", "C"];
+    const seats = [];
+    
+    sections.forEach(section => {
+      for (let i = 1; i <= 20; i++) {
+        seats.push({
+          id: `${section}${i}`,
+          available: Math.random() > 0.3, // 70% available
+          price: section === "A" ? 8500 : section === "B" ? 7500 : 6500
+        });
+      }
+    });
+    
+    return seats;
+  };
+
+  const [seats] = useState(generateSeats());
 
   const handleSeatClick = (seatId: string, available: boolean) => {
     if (available) {
@@ -66,26 +77,32 @@ export function SeatSelectionModal({ isOpen, onClose, game, onPurchase }: SeatSe
             </div>
             
             {/* Seat Map */}
-            <div className="mb-4">
-              <div className="text-center text-sm font-semibold text-gray-600 mb-2">
-                Section A
-              </div>
-              <div className="grid grid-cols-12 gap-1 justify-center">
-                {seats.map((seat) => (
-                  <div
-                    key={seat.id}
-                    className={`w-6 h-6 rounded cursor-pointer transition-colors ${
-                      selectedSeat === seat.id
-                        ? "bg-blue-500"
-                        : seat.available
-                        ? "bg-green-300 hover:bg-green-400"
-                        : "bg-red-300 cursor-not-allowed"
-                    }`}
-                    onClick={() => handleSeatClick(seat.id, seat.available)}
-                    title={seat.available ? `Seat ${seat.id}` : "Taken"}
-                  />
-                ))}
-              </div>
+            <div className="mb-4 space-y-4">
+              {["A", "B", "C"].map(section => (
+                <div key={section}>
+                  <div className="text-center text-sm font-semibold text-gray-600 mb-2">
+                    Section {section} {section === "A" ? "(Premium)" : section === "B" ? "(Standard)" : "(Economy)"}
+                  </div>
+                  <div className="grid grid-cols-10 gap-1 justify-center mb-2">
+                    {seats.filter(seat => seat.id.startsWith(section)).slice(0, 20).map((seat) => (
+                      <div
+                        key={seat.id}
+                        className={`w-6 h-6 rounded cursor-pointer transition-colors text-xs flex items-center justify-center ${
+                          selectedSeat === seat.id
+                            ? "bg-blue-500 text-white"
+                            : seat.available
+                            ? "bg-green-300 hover:bg-green-400 text-green-800"
+                            : "bg-red-300 cursor-not-allowed text-red-800"
+                        }`}
+                        onClick={() => handleSeatClick(seat.id, seat.available)}
+                        title={seat.available ? `Seat ${seat.id} - ${formatPrice(seat.price)}` : "Taken"}
+                      >
+                        {seat.id.slice(-1)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
             
             {/* Legend */}
@@ -118,7 +135,7 @@ export function SeatSelectionModal({ isOpen, onClose, game, onPurchase }: SeatSe
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-green-600">
-                    {formatPrice(8500)}
+                    {formatPrice(seats.find(s => s.id === selectedSeat)?.price || 8500)}
                   </div>
                   <div className="text-sm text-gray-500">incl. fees</div>
                 </div>

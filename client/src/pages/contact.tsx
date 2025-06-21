@@ -21,8 +21,8 @@ export default function Contact() {
 
   const contactMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const response = await apiRequest("POST", "/api/contact", data);
-      return response.json();
+      // Mock successful submission for prototype
+      return new Promise(resolve => setTimeout(() => resolve({ success: true }), 1000));
     },
     onSuccess: () => {
       toast({

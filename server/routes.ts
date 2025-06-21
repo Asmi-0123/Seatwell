@@ -120,7 +120,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update ticket status
       const updatedTicket = await storage.updateTicket(ticketId, {
         status: "sold",
-        buyerId: buyerId,
       });
 
       // Create transaction
@@ -153,7 +152,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const users = await storage.getAllUsers();
       // Remove passwords from response
-      const safeUsers = users.map(({ password, ...user }) => user);
+      const safeUsers = users.map((user: any) => {
+        const { password, ...safeUser } = user;
+        return safeUser;
+      });
       res.json(safeUsers);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch users" });

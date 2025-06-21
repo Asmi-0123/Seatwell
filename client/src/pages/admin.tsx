@@ -26,9 +26,13 @@ import {
   Trash2
 } from "lucide-react";
 import { formatPrice, formatDateTime } from "@/lib/utils";
+import { TicketListingModal } from "@/components/ticket-listing-modal";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Admin() {
   const [lastUpdated] = useState(new Date());
+  const [ticketModalOpen, setTicketModalOpen] = useState(false);
+  const { toast } = useToast();
 
   const { data: tickets = [], isLoading: ticketsLoading } = useQuery({
     queryKey: ["/api/tickets"],
@@ -40,6 +44,10 @@ export default function Admin() {
 
   const { data: transactions = [] } = useQuery({
     queryKey: ["/api/transactions"],
+  });
+
+  const { data: users = [] } = useQuery({
+    queryKey: ["/api/users"],
   });
 
   // Calculate stats
@@ -82,7 +90,10 @@ export default function Admin() {
               minute: '2-digit' 
             })}
           </span>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => {
+            toast({ title: "Data refreshed!" });
+            window.location.reload();
+          }}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
@@ -110,7 +121,7 @@ export default function Admin() {
             <Users className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">847</div>
+            <div className="text-2xl font-bold">{users.length}</div>
             <p className="text-xs text-green-600 font-medium">
               +8% vs last month
             </p>
@@ -159,11 +170,15 @@ export default function Admin() {
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800">Ticket Listings</h2>
               <div className="flex space-x-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => toast({ title: "Filter functionality (mock)" })}>
                   <Filter className="mr-2 h-4 w-4" />
                   Filter
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => setTicketModalOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Ticket
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => toast({ title: "Export functionality (mock)" })}>
                   <Download className="mr-2 h-4 w-4" />
                   Export
                 </Button>
@@ -194,13 +209,13 @@ export default function Admin() {
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" onClick={() => toast({ title: "Viewing ticket details..." })}>
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" onClick={() => toast({ title: "Edit functionality (mock)" })}>
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" onClick={() => toast({ title: "Ticket removed (mock)", variant: "destructive" })}>
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
                         </div>
@@ -216,7 +231,7 @@ export default function Admin() {
           <TabsContent value="users" className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800">User Management</h2>
-              <Button className="seatwell-primary">
+              <Button className="seatwell-primary" onClick={() => toast({ title: "Add user functionality (mock)" })}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add User
               </Button>
@@ -234,36 +249,29 @@ export default function Admin() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell>#001</TableCell>
-                  <TableCell>Max Mustermann</TableCell>
-                  <TableCell>max.muster@email.ch</TableCell>
-                  <TableCell>
-                    <Badge className="bg-blue-100 text-blue-800">Season Holder</Badge>
-                  </TableCell>
-                  <TableCell>Dec 15, 2024</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">View</Button>
-                      <Button variant="ghost" size="sm" className="text-red-600">Suspend</Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>#002</TableCell>
-                  <TableCell>Anna Weber</TableCell>
-                  <TableCell>anna.weber@email.ch</TableCell>
-                  <TableCell>
-                    <Badge className="bg-green-100 text-green-800">Buyer</Badge>
-                  </TableCell>
-                  <TableCell>Dec 18, 2024</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">View</Button>
-                      <Button variant="ghost" size="sm" className="text-red-600">Suspend</Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                {users.map((user: any, index: number) => (
+                  <TableRow key={user.id}>
+                    <TableCell>#{user.id.toString().padStart(3, '0')}</TableCell>
+                    <TableCell>{user.username.replace('.', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <Badge className={
+                        user.type === "admin" ? "bg-purple-100 text-purple-800" :
+                        user.type === "seller" ? "bg-blue-100 text-blue-800" :
+                        "bg-green-100 text-green-800"
+                      }>
+                        {user.type === "seller" ? "Season Holder" : user.type.charAt(0).toUpperCase() + user.type.slice(1)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{new Date(user.createdAt).toLocaleDateString('en-GB')}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button variant="ghost" size="sm" onClick={() => toast({ title: "Viewing user profile..." })}>View</Button>
+                        <Button variant="ghost" size="sm" className="text-red-600" onClick={() => toast({ title: "User suspended (mock)", variant: "destructive" })}>Suspend</Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TabsContent>
@@ -272,7 +280,7 @@ export default function Admin() {
           <TabsContent value="games" className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800">Game Schedule</h2>
-              <Button className="seatwell-primary">
+              <Button className="seatwell-primary" onClick={() => toast({ title: "Add game functionality (mock)" })}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add Game
               </Button>
@@ -298,7 +306,7 @@ export default function Admin() {
                       <span className="text-gray-500">
                         Tickets: {tickets.filter((t: any) => t.gameId === game.id).length} listed
                       </span>
-                      <Button variant="ghost" size="sm" className="text-blue-600">
+                      <Button variant="ghost" size="sm" className="text-blue-600" onClick={() => toast({ title: "Edit game functionality (mock)" })}>
                         Edit
                       </Button>
                     </div>
@@ -312,7 +320,7 @@ export default function Admin() {
           <TabsContent value="transactions" className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800">Transaction History</h2>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => toast({ title: "Export data functionality (mock)" })}>
                 <Download className="mr-2 h-4 w-4" />
                 Export Data
               </Button>
@@ -329,20 +337,30 @@ export default function Admin() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactions.map((transaction: any) => (
-                  <TableRow key={transaction.id}>
-                    <TableCell>#{transaction.id.toString().padStart(3, '0')}</TableCell>
-                    <TableCell>{getGameName(transaction.ticketId)}</TableCell>
-                    <TableCell>{formatPrice(transaction.amount)}</TableCell>
-                    <TableCell>{formatDateTime(transaction.createdAt)}</TableCell>
-                    <TableCell>{getStatusBadge(transaction.status)}</TableCell>
-                  </TableRow>
-                ))}
+                {transactions.map((transaction: any) => {
+                  const ticket = tickets.find((t: any) => t.id === transaction.ticketId);
+                  const gameName = ticket ? getGameName(ticket.gameId) : "Unknown Game";
+                  return (
+                    <TableRow key={transaction.id}>
+                      <TableCell>#{transaction.id.toString().padStart(3, '0')}</TableCell>
+                      <TableCell>{gameName}</TableCell>
+                      <TableCell>{formatPrice(transaction.amount)}</TableCell>
+                      <TableCell>{formatDateTime(transaction.createdAt)}</TableCell>
+                      <TableCell>{getStatusBadge(transaction.status)}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TabsContent>
         </Tabs>
       </Card>
+
+      {/* Ticket Listing Modal */}
+      <TicketListingModal
+        isOpen={ticketModalOpen}
+        onClose={() => setTicketModalOpen(false)}
+      />
     </div>
   );
 }
