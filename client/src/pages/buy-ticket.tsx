@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GameCard } from "@/components/game-card";
-import { SeatSelectionModal } from "@/components/seat-selection-modal";
-import { PurchaseModal } from "@/components/purchase-modal";
+import { EnhancedSeatSelection } from "@/components/enhanced-seat-selection";
+import { EnhancedPurchaseModal } from "@/components/enhanced-purchase-modal";
 import { type Game } from "@shared/schema";
 
 export default function BuyTicket() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [seatSelectionOpen, setSeatSelectionOpen] = useState(false);
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
-  const [purchasedSeat, setPurchasedSeat] = useState("");
+  const [purchasedSeats, setPurchasedSeats] = useState<string[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const { data: games = [], isLoading } = useQuery<Game[]>({
     queryKey: ["/api/games"],
@@ -19,16 +20,19 @@ export default function BuyTicket() {
     queryKey: ["/api/tickets"],
   });
 
-  // Calculate ticket availability for each game
+  // Enhanced ticket availability logic
   const getTicketStatus = (gameId: number) => {
     const gameTickets = tickets.filter((ticket: any) => 
       ticket.gameId === gameId && ticket.status === "available"
     );
     
     if (gameTickets.length === 0) return "none";
-    if (gameTickets.length <= 2) return "few-left";
+    if (gameTickets.length <= 3) return "few-left";
     return "available";
   };
+
+  // Sort games chronologically
+  const sortedGames = games.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const handleGameClick = (game: Game) => {
     const ticketStatus = getTicketStatus(game.id);
@@ -38,9 +42,10 @@ export default function BuyTicket() {
     }
   };
 
-  const handlePurchase = (seatNumber: string) => {
+  const handlePurchase = (seats: string[], price: number) => {
     // Mock purchase logic - simulate success
-    setPurchasedSeat(seatNumber);
+    setPurchasedSeats(seats);
+    setTotalPrice(price);
     setSeatSelectionOpen(false);
     setPurchaseModalOpen(true);
   };
@@ -48,7 +53,8 @@ export default function BuyTicket() {
   const closePurchaseModal = () => {
     setPurchaseModalOpen(false);
     setSelectedGame(null);
-    setPurchasedSeat("");
+    setPurchasedSeats([]);
+    setTotalPrice(0);
   };
 
   return (
@@ -73,7 +79,7 @@ export default function BuyTicket() {
           <div className="text-center">Loading games...</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {games.map((game) => (
+            {sortedGames.map((game) => (
               <GameCard
                 key={game.id}
                 game={game}
@@ -85,21 +91,21 @@ export default function BuyTicket() {
         )}
       </div>
 
-      {/* Seat Selection Modal */}
-      <SeatSelectionModal
+      {/* Enhanced Seat Selection Modal */}
+      <EnhancedSeatSelection
         isOpen={seatSelectionOpen}
         onClose={() => setSeatSelectionOpen(false)}
         game={selectedGame}
         onPurchase={handlePurchase}
       />
 
-      {/* Purchase Confirmation Modal */}
-      <PurchaseModal
+      {/* Enhanced Purchase Modal */}
+      <EnhancedPurchaseModal
         isOpen={purchaseModalOpen}
         onClose={closePurchaseModal}
         game={selectedGame}
-        seatNumber={purchasedSeat}
-        price={8500}
+        seatNumbers={purchasedSeats}
+        totalPrice={totalPrice}
       />
     </div>
   );

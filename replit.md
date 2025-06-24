@@ -78,12 +78,24 @@ The application is configured for deployment on Replit with the following setup:
 
 The build process creates optimized bundles in the `dist` directory, with client assets served statically and server code bundled for Node.js execution.
 
-## Changelog
+## Recent Changes
 
-```
-Changelog:
-- June 21, 2025. Initial setup
-```
+### June 21, 2025 - Major Enhancement Update
+- **Modern Background Design**: Implemented configurable gradient background system
+- **Language Switcher**: Added UI-only language selector with German, French, Italian, English
+- **Enhanced Homepage**: Added About Us and FAQ sections with configurable content
+- **Admin Authentication**: Secured admin panel with email/password protection (seatwell@seatwell.ch / ourstartup)
+- **Improved Seat Selection**: Created realistic Vaudoise Arena layout with multi-seat selection
+- **Enhanced Purchase Flow**: Added comprehensive checkout with payment fields and address collection
+- **Game Management**: Full admin CRUD operations for games with image upload simulation
+- **Chronological Ordering**: Games now display in chronological order (soonest first)
+- **Content Management**: Editable content system for all user-facing text
+- **Data Security Messaging**: Added reassuring security statements throughout flows
+
+### June 21, 2025 - Initial Setup
+- Basic prototype structure with buy/sell ticket flows
+- Admin panel foundation
+- Mock authentication system
 
 ## User Preferences
 

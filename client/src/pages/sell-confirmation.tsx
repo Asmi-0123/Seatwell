@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Check, Info } from "lucide-react";
 import { formatDateTime, formatPrice } from "@/lib/utils";
 import { type Game } from "@shared/schema";
+import { content } from "@/config/content";
 
 export default function SellConfirmation() {
   const [, setLocation] = useLocation();
@@ -114,7 +115,7 @@ export default function SellConfirmation() {
               </span>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              *Based on 75% of average resale price
+              *{content.sellTicket.expectedPayoutText}
             </p>
           </div>
         </div>
@@ -122,6 +123,12 @@ export default function SellConfirmation() {
         {/* Payment Information */}
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Payment Information</h2>
+          
+          {/* Bank Information Explanation */}
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+            <h3 className="font-semibold text-blue-900 mb-2">{content.sellTicket.bankInfoExplanation.title}</h3>
+            <p className="text-blue-800 text-sm">{content.sellTicket.bankInfoExplanation.text}</p>
+          </div>
           <div className="space-y-4">
             <div>
               <Label htmlFor="bank-name">Bank Name</Label>
@@ -163,6 +170,13 @@ export default function SellConfirmation() {
                 className="mt-1"
               />
             </div>
+          </div>
+          
+          {/* Data Security Statement */}
+          <div className="mt-6 p-3 bg-green-50 rounded-lg">
+            <p className="text-green-800 text-sm font-medium">
+              🔒 {content.sellTicket.dataSecurityStatement}
+            </p>
           </div>
         </div>
       </div>

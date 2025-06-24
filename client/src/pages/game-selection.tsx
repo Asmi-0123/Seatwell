@@ -14,6 +14,9 @@ export default function GameSelection() {
     queryKey: ["/api/games"],
   });
 
+  // Sort games chronologically (soonest first)
+  const sortedGames = games.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
   const toggleGameSelection = (gameId: number) => {
     const newSelection = new Set(selectedGames);
     if (newSelection.has(gameId)) {
@@ -63,7 +66,7 @@ export default function GameSelection() {
         <>
           {/* Game Selection Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {games.map((game) => (
+            {sortedGames.map((game) => (
               <div key={game.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <div className="p-6 flex items-center justify-between">
                   <div className="flex items-center">

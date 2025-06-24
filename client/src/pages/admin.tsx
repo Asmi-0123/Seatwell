@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,12 +27,33 @@ import {
 } from "lucide-react";
 import { formatPrice, formatDateTime } from "@/lib/utils";
 import { TicketListingModal } from "@/components/ticket-listing-modal";
+import { AdminLoginModal } from "@/components/admin-login-modal";
+import { GameManagementModal } from "@/components/game-management-modal";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Admin() {
   const [lastUpdated] = useState(new Date());
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
+  const [gameModalOpen, setGameModalOpen] = useState(false);
+  const [gameModalMode, setGameModalMode] = useState<"add" | "edit">("add");
+  const [selectedGame, setSelectedGame] = useState<any>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(true);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Check if admin is already authenticated (in a real app, this would check session/token)
+    const adminAuth = sessionStorage.getItem("adminAuthenticated");
+    if (adminAuth === "true") {
+      setIsAuthenticated(true);
+      setLoginModalOpen(false);
+    }
+  }, []);
+
+  const handleAdminLogin = () => {
+    setIsAuthenticated(true);
+    sessionStorage.setItem("adminAuthenticated", "true");
+  };
 
   const { data: tickets = [], isLoading: ticketsLoading } = useQuery({
     queryKey: ["/api/tickets"],
@@ -74,6 +95,22 @@ export default function Admin() {
       </Badge>
     );
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <AdminLoginModal
+          isOpen={loginModalOpen}
+          onClose={() => setLoginModalOpen(false)}
+          onSuccess={handleAdminLogin}
+        />
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Admin Access Required</h1>
+          <p className="text-gray-600">Please login to access the admin panel.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -280,7 +317,11 @@ export default function Admin() {
           <TabsContent value="games" className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800">Game Schedule</h2>
-              <Button className="seatwell-primary" onClick={() => toast({ title: "Add game functionality (mock)" })}>
+              <Button className="seatwell-primary" onClick={() => {
+                setGameModalMode("add");
+                setSelectedGame(null);
+                setGameModalOpen(true);
+              }}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add Game
               </Button>
@@ -306,7 +347,11 @@ export default function Admin() {
                       <span className="text-gray-500">
                         Tickets: {tickets.filter((t: any) => t.gameId === game.id).length} listed
                       </span>
-                      <Button variant="ghost" size="sm" className="text-blue-600" onClick={() => toast({ title: "Edit game functionality (mock)" })}>
+                      <Button variant="ghost" size="sm" className="text-blue-600" onClick={() => {
+                        setGameModalMode("edit");
+                        setSelectedGame(game);
+                        setGameModalOpen(true);
+                      }}>
                         Edit
                       </Button>
                     </div>
@@ -360,6 +405,14 @@ export default function Admin() {
       <TicketListingModal
         isOpen={ticketModalOpen}
         onClose={() => setTicketModalOpen(false)}
+      />
+
+      {/* Game Management Modal */}
+      <GameManagementModal
+        isOpen={gameModalOpen}
+        onClose={() => setGameModalOpen(false)}
+        game={selectedGame}
+        mode={gameModalMode}
       />
     </div>
   );

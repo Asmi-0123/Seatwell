@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { GameCard } from "@/components/game-card";
 import { useQuery } from "@tanstack/react-query";
 import { type Game } from "@shared/schema";
+import { content, theme } from "@/config/content";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   const { data: games = [], isLoading } = useQuery<Game[]>({
@@ -25,29 +28,25 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
+    <div 
+      className="min-h-screen"
+      style={{ background: theme.background.gradient }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
       {/* Hero Section */}
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
           Seatwell: Get Your Seat and Game on!
         </h1>
-        <p className="text-xl text-gray-600 mb-4">
+        <p className="text-xl text-white/90 mb-4">
           Do you want to attend a game but it is sold out? We got you covered!
         </p>
-        <p className="text-lg text-gray-500 mb-8">
+        <p className="text-lg text-white/80 mb-8">
           Resell or buy tickets here
         </p>
-        <p className="text-gray-600 max-w-2xl mx-auto mb-8">
+        <p className="text-white/90 max-w-2xl mx-auto mb-12">
           We believe in sharing value. Our platform ensures that every empty seat becomes an opportunity for someone to feel good, fans smiling to buyer.
         </p>
-        
-        <div className="flex items-center justify-center space-x-2 mb-12">
-          <span className="text-sm text-gray-500">Made in Switzerland</span>
-          <div className="w-6 h-4 bg-red-600 flex items-center justify-center">
-            <div className="w-1 h-3 bg-white"></div>
-            <div className="w-3 h-1 bg-white absolute"></div>
-          </div>
-        </div>
         
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -66,12 +65,12 @@ export default function Home() {
 
       {/* Games on the Horizon */}
       <div className="mb-16">
-        <h2 className="text-5xl font-bold text-gray-300 text-center mb-12">
+        <h2 className="text-5xl font-bold text-white/50 text-center mb-12">
           GAMES ON THE HORIZON
         </h2>
         
         {isLoading ? (
-          <div className="text-center">Loading games...</div>
+          <div className="text-center text-white">Loading games...</div>
         ) : (
           <>
             {/* Featured Game */}
@@ -102,6 +101,44 @@ export default function Home() {
             </div>
           </>
         )}
+      </div>
+
+      {/* About Us Section */}
+      <div className="mb-16">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-6 text-center">
+            {content.homepage.aboutUs.title}
+          </h2>
+          <p className="text-white/90 text-lg leading-relaxed text-center">
+            {content.homepage.aboutUs.text}
+          </p>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="mb-16">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">
+            Frequently Asked Questions
+          </h2>
+          <Card className="bg-white/10 backdrop-blur-md border-white/20">
+            <CardContent className="p-6">
+              <Accordion type="single" collapsible className="w-full">
+                {content.homepage.faq.map((item, index) => (
+                  <AccordionItem key={index} value={`item-${index}`} className="border-white/20">
+                    <AccordionTrigger className="text-white hover:text-white/80 text-left">
+                      {item.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/90">
+                      {item.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
       </div>
     </div>
   );
