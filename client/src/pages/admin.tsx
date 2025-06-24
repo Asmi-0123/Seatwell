@@ -30,6 +30,7 @@ import { TicketListingModal } from "@/components/ticket-listing-modal";
 import { AdminLoginModal } from "@/components/admin-login-modal";
 import { GameManagementModal } from "@/components/game-management-modal";
 import { BackgroundConfig } from "@/components/background-config";
+import { BackgroundWrapper } from "@/components/background-wrapper";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -124,7 +125,7 @@ export default function Admin() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <BackgroundWrapper className="flex items-center justify-center">
         <AdminLoginModal
           isOpen={loginModalOpen}
           onClose={() => setLoginModalOpen(false)}
@@ -134,12 +135,13 @@ export default function Admin() {
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Admin Access Required</h1>
           <p className="text-gray-600">Please login to access the admin panel.</p>
         </div>
-      </div>
+      </BackgroundWrapper>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <BackgroundWrapper>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Admin Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -462,6 +464,7 @@ export default function Admin() {
         game={selectedGame}
         mode={gameModalMode}
       />
-    </div>
+      </div>
+    </BackgroundWrapper>
   );
 }

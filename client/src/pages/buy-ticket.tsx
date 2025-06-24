@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { GameCard } from "@/components/game-card";
 import { EnhancedSeatSelection } from "@/components/enhanced-seat-selection";
 import { EnhancedPurchaseModal } from "@/components/enhanced-purchase-modal";
+import { BackgroundWrapper } from "@/components/background-wrapper";
 import { type Game } from "@shared/schema";
 
 export default function BuyTicket() {
@@ -58,7 +59,8 @@ export default function BuyTicket() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <BackgroundWrapper>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
@@ -107,6 +109,7 @@ export default function BuyTicket() {
         seatNumbers={purchasedSeats}
         totalPrice={totalPrice}
       />
-    </div>
+      </div>
+    </BackgroundWrapper>
   );
 }

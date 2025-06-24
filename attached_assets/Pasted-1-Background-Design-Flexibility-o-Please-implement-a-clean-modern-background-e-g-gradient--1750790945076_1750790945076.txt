@@ -1,0 +1,147 @@
+1.	Background & Design Flexibility
+
+o	Please implement a clean, modern background (e.g., gradient or image-based)
+o	We’d like to be able to easily change or update background images ourselves later — ideally via a variable or config setting
+
+
+2.	Language Switcher (UI only)
+
+o	Add a language dropdown or buttons in the top-right corner of the website
+o	Options: German, French, Italian, English
+o	For now, this does not need to actually translate the website — just simulate the switcher (we’ll implement translation later)
+
+Homepage Modifications (Updated):
+1.	Modern background design
+o	Replace the current background with a more modern, slightly dark background (gradient or image-based is fine)
+o	Please make the background easily editable (e.g., in a config or assets folder)
+
+2.	Remove “Made in Switzerland”
+
+o	Please delete this text from the homepage 
+
+3.	Add an “About Us” section
+
+o	Below the “Games on the Horizon” list, please add an About Us block
+o	Content should be editable — we want to be able to update this text ourselves in the future
+
+
+4.	Add a “Frequently Asked Questions” section
+o	Directly below the About Us section, add a FAQ area
+o	Please format it with expandable questions/answers if possible
+o	Again, content should be easy for us to update
+ 
+Buy a Ticket Page — Requested Modifications
+1.	Game Management
+
+o	We want to be able to:
+	Add new games
+	Edit or delete games
+	Upload game images (e.g. team logos, banner images)
+(This will probably be managed from the admin panel — we’ll explain more there.)
+
+
+2.	Ticket Availability Logic
+o	The page should automatically show status:
+	“Tickets Available” if there are available seats
+	“Few Tickets Left” if below a certain threshold
+	“No Tickets Available” if none are left
+
+
+3.	Seat Map Enhancements
+
+o	If possible, please implement a more realistic seat map, ideally one that resembles Vaudoise Arena in Lausanne
+
+o	If a full map isn’t possible now, a better hockey arena-style layout would already be helpful
+
+
+4.	Multiple Seat Selection
+
+o	Users should be able to select multiple seats at once
+
+o	The total price should automatically update based on selected seats
+
+o	Show selected seat numbers, date, and location clearly below the map
+
+
+💳 Purchase Ticket Enhancements
+5.	Purchase Ticket Enhancements 
+o	Mock Payment Options
+	Add mock fields to simulate a payment with:
+	Credit card
+
+
+
+
+6.	Additional Checkout Fields
+
+o	Add input fields to collect:
+
+	Home address
+
+	Email address
+
+
+o	These can be basic input fields and should appear before or with the "Purchase Ticket" button
+
+
+Sell a Ticket – Requested Modifications
+1.	Game Listing Order
+
+o	Games should be listed in chronological order, with the soonest game at the top and the latest at the bottom
+
+2.	 Expected Payout Text (Below the Total Amount)
+o	The current sentence (“*Based on 75% of average resale price”) should be editable
+
+3.	Bank Information Explanation
+
+o	Please add a short paragraph above the bank input fields explaining why this information is needed
+
+o	Text: “Why we ask for your bank details:”
+“We use your bank information to process your payout after your ticket is resold. You retain full ownership of your ticket until it is purchased. Payments are transferred securely within 3–5 business days after the game.”
+
+
+4.	Data Security Statement
+
+o	Add a small text (below or near the payment fields) that reassures the user about how their data is handled. Suggested text:
+
+o	“Your data is safe with us
+Seatwell treats your personal and financial information with the highest level of security. Your data is encrypted and will never be shared with third parties.”
+
+ 
+Contact page: 
+ 
+o	We want to be able to modify this text
+
+Admin Panel — Requested Modifications
+1.	Secure Login Access
+
+o	Access to the admin panel should be protected with email and password
+
+o	Please pre-set the credentials to:
+
+	Email: seatwell@seatwell.ch
+	Password: ourstartup
+
+o	This should be known only between us (no access for others)
+
+2.	Ticket Management & User Management
+
+o	These two sections are working well — no changes needed
+
+3.	Game Schedule Management (Needs Enhancement)
+
+o	The admin must be able to:
+
+	Add new games
+	Modify existing games
+	Delete games
+
+o	When adding or editing a game, we want to:
+	Upload a custom image (e.g., for the match or arena)
+	That image should automatically update across the entire platform wherever that game appears (Buy flow, homepage, etc.)
+
+
+4.	Admin-only Edit Control
+
+o	All game edits (especially images) must be restricted to the admin
+o	Only accessible with the above login credentials — no public user or seller should be able to change games or images

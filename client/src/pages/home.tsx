@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { GameCard } from "@/components/game-card";
 import { useQuery } from "@tanstack/react-query";
 import { type Game } from "@shared/schema";
-import { content, theme } from "@/config/content";
+import { content } from "@/config/content";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
+import { BackgroundWrapper } from "@/components/background-wrapper";
 
 export default function Home() {
   const { data: games = [], isLoading } = useQuery<Game[]>({
@@ -27,27 +28,8 @@ export default function Home() {
     return "available";
   };
 
-  const getBackgroundStyle = () => {
-    switch (theme.background.type) {
-      case "image":
-        return {
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${theme.background.image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed"
-        };
-      case "solid":
-        return { backgroundColor: theme.background.solid };
-      default:
-        return { background: theme.background.gradient };
-    }
-  };
-
   return (
-    <div 
-      className="min-h-screen"
-      style={getBackgroundStyle()}
-    >
+    <BackgroundWrapper>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
       {/* Hero Section */}
       <div className="text-center mb-16">
@@ -156,6 +138,6 @@ export default function Home() {
         </div>
       </div>
       </div>
-    </div>
+    </BackgroundWrapper>
   );
 }

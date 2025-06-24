@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Mail, Phone, MapPin, User } from "lucide-react";
 import { Link } from "wouter";
+import { BackgroundWrapper } from "@/components/background-wrapper";
 
 export default function Contact() {
   const { toast } = useToast();
@@ -50,7 +51,8 @@ export default function Contact() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <BackgroundWrapper>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Contact Us</h1>
         <p className="text-gray-600 mb-4">Get in touch with the Seatwell team</p>
@@ -181,6 +183,7 @@ export default function Contact() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </BackgroundWrapper>
   );
 }
