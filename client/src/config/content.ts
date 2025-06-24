@@ -47,9 +47,19 @@ Founded with the vision of making sports more accessible, we believe every fan d
 
 export const theme = {
   background: {
-    type: "gradient", // "gradient" | "image" | "solid" - change this to test different backgrounds
-    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-    solid: "#1e293b"
+    // Global background settings
+    global: {
+      type: "solid", // "gradient" | "image" | "solid"
+      gradient: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      solid: "#000000"
+    },
+    // Homepage specific background
+    homepage: {
+      type: "image", // "gradient" | "image" | "solid"
+      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      solid: "#1e293b"
+    }
   }
 };

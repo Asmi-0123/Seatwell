@@ -4,22 +4,25 @@ import { theme } from "@/config/content";
 interface BackgroundWrapperProps {
   children: ReactNode;
   className?: string;
+  useHomepageBackground?: boolean;
 }
 
-export function BackgroundWrapper({ children, className = "" }: BackgroundWrapperProps) {
+export function BackgroundWrapper({ children, className = "", useHomepageBackground = false }: BackgroundWrapperProps) {
   const getBackgroundStyle = () => {
-    switch (theme.background.type) {
+    const bgConfig = useHomepageBackground ? theme.background.homepage : theme.background.global;
+    
+    switch (bgConfig.type) {
       case "image":
         return {
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${theme.background.image})`,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${bgConfig.image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed"
         };
       case "solid":
-        return { backgroundColor: theme.background.solid };
+        return { backgroundColor: bgConfig.solid };
       default:
-        return { background: theme.background.gradient };
+        return { background: bgConfig.gradient };
     }
   };
 

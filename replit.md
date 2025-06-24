@@ -80,6 +80,15 @@ The build process creates optimized bundles in the `dist` directory, with client
 
 ## Recent Changes
 
+### June 24, 2025 - Full Dark Mode & Background System
+- **Complete Dark Mode Implementation**: Black background across all pages with proper contrast
+- **Dual Background System**: Separate configurable backgrounds for homepage (image) and global (black)
+- **Enhanced Background Configuration**: Admin panel with tabs for global and homepage background settings
+- **Dark Navigation**: Updated navbar and footer with white/gray text on dark background
+- **Fixed Admin CRUD**: Resolved schema import issues - game creation/editing/deletion now fully functional
+- **Background Wrapper**: Applied consistent theming across all pages including sell-ticket page
+- **Easy Background Switching**: Simple config changes for gradient/image/solid backgrounds
+
 ### June 21, 2025 - Major Enhancement Update
 - **Modern Background Design**: Implemented configurable gradient background system
 - **Language Switcher**: Added UI-only language selector with German, French, Italian, English

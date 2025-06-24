@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ClubLoginModal } from "@/components/club-login-modal";
+import { BackgroundWrapper } from "@/components/background-wrapper";
 
 export default function SellTicket() {
   const [, setLocation] = useLocation();
@@ -13,7 +14,8 @@ export default function SellTicket() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <BackgroundWrapper>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
@@ -124,6 +126,7 @@ export default function SellTicket() {
         onClose={() => setLoginModalOpen(false)}
         onSuccess={handleLoginSuccess}
       />
-    </div>
+      </div>
+    </BackgroundWrapper>
   );
 }
