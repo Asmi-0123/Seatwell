@@ -30,6 +30,8 @@ import { TicketListingModal } from "@/components/ticket-listing-modal";
 import { AdminLoginModal } from "@/components/admin-login-modal";
 import { GameManagementModal } from "@/components/game-management-modal";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Admin() {
   const [lastUpdated] = useState(new Date());
@@ -40,6 +42,29 @@ export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(true);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const deleteGameMutation = useMutation({
+    mutationFn: (gameId: number) => 
+      fetch(`/api/games/${gameId}`, { method: 'DELETE' }).then(res => {
+        if (!res.ok) throw new Error('Failed to delete game');
+        return res;
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games"] });
+      toast({
+        title: "Game Deleted",
+        description: "The game has been successfully deleted.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete game. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
 
   useEffect(() => {
     // Check if admin is already authenticated (in a real app, this would check session/token)
@@ -347,13 +372,27 @@ export default function Admin() {
                       <span className="text-gray-500">
                         Tickets: {tickets.filter((t: any) => t.gameId === game.id).length} listed
                       </span>
-                      <Button variant="ghost" size="sm" className="text-blue-600" onClick={() => {
-                        setGameModalMode("edit");
-                        setSelectedGame(game);
-                        setGameModalOpen(true);
-                      }}>
-                        Edit
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button variant="ghost" size="sm" className="text-blue-600" onClick={() => {
+                          setGameModalMode("edit");
+                          setSelectedGame(game);
+                          setGameModalOpen(true);
+                        }}>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-red-600 hover:text-red-800" 
+                          onClick={() => {
+                            if (confirm(`Are you sure you want to delete ${game.homeTeam} vs ${game.awayTeam}?`)) {
+                              deleteGameMutation.mutate(game.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

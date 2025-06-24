@@ -57,6 +57,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/games", async (req, res) => {
+    try {
+      const gameData = insertGameSchema.parse(req.body);
+      const game = await storage.createGame(gameData);
+      res.status(201).json(game);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to create game" });
+    }
+  });
+
+  app.patch("/api/games/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const gameData = req.body;
+      const game = await storage.updateGame(id, gameData);
+      if (!game) {
+        return res.status(404).json({ message: "Game not found" });
+      }
+      res.json(game);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update game" });
+    }
+  });
+
+  app.delete("/api/games/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteGame(id);
+      if (!success) {
+        return res.status(404).json({ message: "Game not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(400).json({ message: "Failed to delete game" });
+    }
+  });
+
   // Ticket routes
   app.get("/api/tickets", async (req, res) => {
     try {

@@ -12,6 +12,7 @@ export interface IStorage {
   getAllGames(): Promise<Game[]>;
   createGame(game: InsertGame): Promise<Game>;
   updateGame(id: number, game: Partial<InsertGame>): Promise<Game | undefined>;
+  deleteGame(id: number): Promise<boolean>;
   
   // Tickets
   getTicket(id: number): Promise<Ticket | undefined>;
@@ -231,6 +232,17 @@ export class MemStorage implements IStorage {
     const updatedGame = { ...game, ...gameUpdate };
     this.games.set(id, updatedGame);
     return updatedGame;
+  }
+
+  async deleteGame(id: number): Promise<boolean> {
+    const existed = this.games.has(id);
+    if (existed) {
+      this.games.delete(id);
+      // Also clean up related tickets
+      const relatedTickets = Array.from(this.tickets.values()).filter(ticket => ticket.gameId === id);
+      relatedTickets.forEach(ticket => this.tickets.delete(ticket.id));
+    }
+    return existed;
   }
 
   // Ticket methods

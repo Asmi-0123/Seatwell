@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { Upload, X } from "lucide-react";
 import { type Game } from "@shared/schema";
 
@@ -17,6 +19,7 @@ interface GameManagementModalProps {
 
 export function GameManagementModal({ isOpen, onClose, game, mode }: GameManagementModalProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     homeTeam: game?.homeTeam || "",
     awayTeam: game?.awayTeam || "",
@@ -27,16 +30,73 @@ export function GameManagementModal({ isOpen, onClose, game, mode }: GameManagem
   const [gameImage, setGameImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
 
+  const createGameMutation = useMutation({
+    mutationFn: (gameData: any) => 
+      fetch('/api/games', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gameData)
+      }).then(res => {
+        if (!res.ok) throw new Error('Failed to create game');
+        return res.json();
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games"] });
+      toast({
+        title: "Game Added Successfully!",
+        description: `${formData.homeTeam} vs ${formData.awayTeam} has been added.`,
+      });
+      onClose();
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to add game. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const updateGameMutation = useMutation({
+    mutationFn: (gameData: any) => 
+      fetch(`/api/games/${game?.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gameData)
+      }).then(res => {
+        if (!res.ok) throw new Error('Failed to update game');
+        return res.json();
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/games"] });
+      toast({
+        title: "Game Updated Successfully!",
+        description: `${formData.homeTeam} vs ${formData.awayTeam} has been updated.`,
+      });
+      onClose();
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update game. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Mock save functionality
-    toast({
-      title: mode === "add" ? "Game Added Successfully!" : "Game Updated Successfully!",
-      description: `${formData.homeTeam} vs ${formData.awayTeam} has been ${mode === "add" ? "added" : "updated"}.`,
-    });
-    
-    onClose();
+    const gameData = {
+      ...formData,
+      date: new Date(formData.date).toISOString(),
+    };
+
+    if (mode === "add") {
+      createGameMutation.mutate(gameData);
+    } else {
+      updateGameMutation.mutate(gameData);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -201,8 +261,15 @@ export function GameManagementModal({ isOpen, onClose, game, mode }: GameManagem
             <Button type="button" variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-            <Button type="submit" className="flex-1 seatwell-primary">
-              {mode === "add" ? "Add Game" : "Update Game"}
+            <Button 
+              type="submit" 
+              className="flex-1 seatwell-primary"
+              disabled={createGameMutation.isPending || updateGameMutation.isPending}
+            >
+              {createGameMutation.isPending || updateGameMutation.isPending 
+                ? "Saving..." 
+                : mode === "add" ? "Add Game" : "Update Game"
+              }
             </Button>
           </div>
         </form>
