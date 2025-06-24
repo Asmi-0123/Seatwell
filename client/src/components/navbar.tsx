@@ -45,6 +45,7 @@ export function Navbar() {
                 </span>
               </Link>
             ))}
+            <LanguageSwitcher />
           </div>
 
           {/* Mobile menu button */}
