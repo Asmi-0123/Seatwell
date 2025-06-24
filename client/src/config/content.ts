@@ -47,9 +47,9 @@ Founded with the vision of making sports more accessible, we believe every fan d
 
 export const theme = {
   background: {
-    type: "gradient", // "gradient" | "image" | "solid"
+    type: "image", // "gradient" | "image" | "solid" - change this to test different backgrounds
     gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    image: "/assets/stadium-bg.jpg",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
     solid: "#f8fafc"
   }
 };

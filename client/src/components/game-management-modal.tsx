@@ -89,8 +89,10 @@ export function GameManagementModal({ isOpen, onClose, game, mode }: GameManagem
     
     const gameData = {
       ...formData,
-      date: new Date(formData.date).toISOString(),
+      date: formData.date, // Keep as datetime-local string, backend will handle conversion
     };
+
+    console.log("Submitting game data:", gameData);
 
     if (mode === "add") {
       createGameMutation.mutate(gameData);

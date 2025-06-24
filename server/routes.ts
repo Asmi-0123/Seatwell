@@ -59,11 +59,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/games", async (req, res) => {
     try {
+      console.log("Received game data:", req.body);
       const gameData = insertGameSchema.parse(req.body);
       const game = await storage.createGame(gameData);
       res.status(201).json(game);
     } catch (error) {
-      res.status(400).json({ message: "Failed to create game" });
+      console.error("Game creation error:", error);
+      res.status(400).json({ message: "Failed to create game", error: error.message });
     }
   });
 

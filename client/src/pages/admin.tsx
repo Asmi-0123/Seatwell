@@ -29,6 +29,7 @@ import { formatPrice, formatDateTime } from "@/lib/utils";
 import { TicketListingModal } from "@/components/ticket-listing-modal";
 import { AdminLoginModal } from "@/components/admin-login-modal";
 import { GameManagementModal } from "@/components/game-management-modal";
+import { BackgroundConfig } from "@/components/background-config";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -436,6 +437,14 @@ export default function Admin() {
                 })}
               </TableBody>
             </Table>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-4">
+            <div>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Website Settings</h2>
+              <BackgroundConfig />
+            </div>
           </TabsContent>
         </Tabs>
       </Card>

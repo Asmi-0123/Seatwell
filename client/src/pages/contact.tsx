@@ -52,9 +52,9 @@ export default function Contact() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">{content.contact.title}</h1>
-        <p className="text-gray-600 mb-4">{content.contact.subtitle}</p>
-        <p className="text-gray-500">{content.contact.description}</p>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">Contact Us</h1>
+        <p className="text-gray-600 mb-4">Get in touch with the Seatwell team</p>
+        <p className="text-gray-500">Have questions about buying or selling tickets? Need support with your account? We're here to help you make the most of your sports experience.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

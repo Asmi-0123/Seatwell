@@ -27,10 +27,26 @@ export default function Home() {
     return "available";
   };
 
+  const getBackgroundStyle = () => {
+    switch (theme.background.type) {
+      case "image":
+        return {
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${theme.background.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed"
+        };
+      case "solid":
+        return { backgroundColor: theme.background.solid };
+      default:
+        return { background: theme.background.gradient };
+    }
+  };
+
   return (
     <div 
       className="min-h-screen"
-      style={{ background: theme.background.gradient }}
+      style={getBackgroundStyle()}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
       {/* Hero Section */}
